@@ -1,11 +1,24 @@
-# Prerequisites
-*.d
+# Custom files
+LocalConfig.cmake
+src/util/version.h
+
+# Custom directories
+.idea/
+.vscode
+.DS_Store
+build*/
+colmap*/
+install-debug/
+install-release/
+data/
+doc/_build
 
 # Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
+*.pyc
 
 # Precompiled Headers
 *.gch
@@ -18,7 +31,6 @@
 
 # Fortran module files
 *.mod
-*.smod
 
 # Compiled Static libraries
 *.lai
