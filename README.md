@@ -88,9 +88,11 @@ Please refer to the following papers for the technique details.
 ```
 @article{
   title={3D Reconstruction of Spherical Images based on Incremental Structure from Motion},
-  author={Jiang, San and You, Kan and Li, Yaxin and Weng, Duojie and Chen, Wu},
-  journal={arXiv preprint arXiv:2306.12770},
-  year={2023}
+  author={Jiang, San and You, Kan and Chen, Wu and Weng, Duojie and Li, Yaxin},
+  journal={International Journal of Remote Sensing},
+  pages={1--25},
+  year={2024},
+  publisher={Taylor & Francis}
 }
 
 @article{
