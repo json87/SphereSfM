@@ -79,7 +79,9 @@ colmap gui --database_path ./colmap1/database.db --image_path ./images --import_
 
 ## Datasets
 
-Three datasets have been reconstruted by using SphereSfM, including [campus parterre](https://drive.google.com/file/d/1KB1uk9wEUvEGVnFOwcrw4r_KxUk711eb/view?usp=drive_link), [campus building](https://drive.google.com/file/d/17HfwXxuU-Q-tzZtlsroGa-ZibepAT0-a/view?usp=drive_link), and [urban street](https://drive.google.com/file/d/1Tmm7_7153ybi1mhzGUe2L8j_r1ho-UJf/view?usp=drive_link).
+Three datasets have been reconstruted by using SphereSfM, including [campus parterre](https://drive.google.com/file/d/1KB1uk9wEUvEGVnFOwcrw4r_KxUk711eb/view?usp=drive_link), [campus building](https://drive.google.com/file/d/17HfwXxuU-Q-tzZtlsroGa-ZibepAT0-a/view?usp=drive_link), and [urban street](https://drive.google.com/file/d/1Tmm7_7153ybi1mhzGUe2L8j_r1ho-UJf/view?usp=drive_link). 
+
+The illustration of the SfM reconstruction of urban street can be found [here](https://www.dropbox.com/s/pq8zv8hrljmbp6q/SphereSfM%2002.webm?dl=0).
 
 ## Reference
 
@@ -102,5 +104,16 @@ Please refer to the following papers for the technique details.
   pages={1--30},
   year={2024},
   publisher={Taylor & Francis}
+}
+
+@article{
+  title={Reliable Feature Matching for Spherical Images via Local Geometric Rectification and Learned Descriptor},
+  author={Jiang, San and Liu, Junhuan and Li, Yaxin and Weng, Duojie and Chen, Wu},
+  journal={Remote Sensing},
+  volume={15},
+  number={20},
+  pages={4954},
+  year={2023},
+  publisher={MDPI}
 }
 ```
