@@ -11,7 +11,7 @@ integrated into a SfM-MVS workflow.
 
 ## Build
 
-The software package has been integrated into the well-known SfM engine ![ColMap](https://github.com/colmap/colmap). Thus, you can build the code according to the ![document](https://colmap.github.io/).
+The software package has been integrated into the well-known SfM engine [ColMap](https://github.com/colmap/colmap). Thus, you can build the code according to the [document](https://colmap.github.io/).
 
 ## Usage
 
