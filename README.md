@@ -13,6 +13,12 @@ integrated into a SfM-MVS workflow.
 
 The software package has been integrated into the well-known SfM engine [ColMap](https://github.com/colmap/colmap). Thus, you can build the code according to the [document](https://colmap.github.io/).
 
+## Dataset
+
+Three datasets have been reconstruted by using SphereSfM, including campus parterre ([google driver](https://drive.google.com/file/d/1KB1uk9wEUvEGVnFOwcrw4r_KxUk711eb/view?usp=drive_link), [baidu disk](https://pan.baidu.com/s/1C259Ygf_lJHd5iT-gmJWGA?pwd=5cqb)), campus building ([google driver](https://drive.google.com/file/d/17HfwXxuU-Q-tzZtlsroGa-ZibepAT0-a/view?usp=drive_link), [baidu disk](https://pan.baidu.com/s/1r_41WPs4R1wV2ow1rmgabw?pwd=olxy)), and urban street ([google driver](https://drive.google.com/file/d/1Tmm7_7153ybi1mhzGUe2L8j_r1ho-UJf/view?usp=drive_link), [baidu disk](https://pan.baidu.com/s/1YcNiCH7oWSA4EW_x5epAsQ?pwd=sis5)). 
+
+The illustration of the SfM reconstruction of urban street can be found [here](https://www.dropbox.com/s/pq8zv8hrljmbp6q/SphereSfM%2002.webm?dl=0).
+
 ## Usage
 
 There are two ways for data processing, i.e., GUI and command-line modes.
@@ -77,31 +83,25 @@ Show reconstructed models by using ColMap GUI.
 colmap gui --database_path ./colmap1/database.db --image_path ./images --import_path ./colmap1/sparse/0
 ```
 
-## Datasets
-
-Three datasets have been reconstruted by using SphereSfM, including campus parterre ([google driver](https://drive.google.com/file/d/1KB1uk9wEUvEGVnFOwcrw4r_KxUk711eb/view?usp=drive_link), [baidu disk](https://pan.baidu.com/s/1C259Ygf_lJHd5iT-gmJWGA?pwd=5cqb)), campus building ([google driver](https://drive.google.com/file/d/17HfwXxuU-Q-tzZtlsroGa-ZibepAT0-a/view?usp=drive_link), [baidu disk](https://pan.baidu.com/s/1r_41WPs4R1wV2ow1rmgabw?pwd=olxy)), and urban street ([google driver](https://drive.google.com/file/d/1Tmm7_7153ybi1mhzGUe2L8j_r1ho-UJf/view?usp=drive_link), [baidu disk](https://pan.baidu.com/s/1YcNiCH7oWSA4EW_x5epAsQ?pwd=sis5)). 
-
-The illustration of the SfM reconstruction of urban street can be found [here](https://www.dropbox.com/s/pq8zv8hrljmbp6q/SphereSfM%2002.webm?dl=0).
-
 ## Reference
 
 Please refer to the following papers for the technique details.
 
 ```
 @article{
-  title={3D Reconstruction of Spherical Images based on Incremental Structure from Motion},
-  author={Jiang, San and You, Kan and Chen, Wu and Weng, Duojie and Li, Yaxin},
-  journal={International Journal of Remote Sensing},
-  pages={1--25},
+  title={3D reconstruction of spherical images: a review of techniques, applications, and prospects},
+  author={Jiang, San and You, Kan and Li, Yaxin and Weng, Duojie and Chen, Wu},
+  journal={Geo-spatial Information Science},
+  pages={1--30},
   year={2024},
   publisher={Taylor & Francis}
 }
 
 @article{
-  title={3D reconstruction of spherical images: a review of techniques, applications, and prospects},
-  author={Jiang, San and You, Kan and Li, Yaxin and Weng, Duojie and Chen, Wu},
-  journal={Geo-spatial Information Science},
-  pages={1--30},
+  title={3D Reconstruction of Spherical Images based on Incremental Structure from Motion},
+  author={Jiang, San and You, Kan and Chen, Wu and Weng, Duojie and Li, Yaxin},
+  journal={International Journal of Remote Sensing},
+  pages={1--25},
   year={2024},
   publisher={Taylor & Francis}
 }
