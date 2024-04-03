@@ -98,8 +98,8 @@ Please refer to the following papers for the technique details.
 }
 
 @article{
-  author = {San Jiang, Kan You, Wu Chen, Duojie Weng and Yaxin Li},
   title = {3D reconstruction of spherical images based on incremental structure from motion},
+  author = {San Jiang, Kan You, Wu Chen, Duojie Weng and Yaxin Li},
   journal = {International Journal of Remote Sensing},
   volume = {45},
   number = {8},
