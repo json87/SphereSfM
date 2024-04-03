@@ -89,31 +89,33 @@ Please refer to the following papers for the technique details.
 
 ```
 @article{
-  title={3D reconstruction of spherical images: a review of techniques, applications, and prospects},
-  author={Jiang, San and You, Kan and Li, Yaxin and Weng, Duojie and Chen, Wu},
-  journal={Geo-spatial Information Science},
-  pages={1--30},
-  year={2024},
-  publisher={Taylor & Francis}
+  title = {3D reconstruction of spherical images: a review of techniques, applications, and prospects},
+  author = {Jiang, San and You, Kan and Li, Yaxin and Weng, Duojie and Chen, Wu},
+  journal = {Geo-spatial Information Science},
+  pages = {1--30},
+  year = {2024},
+  publisher = {Taylor & Francis}
 }
 
 @article{
-  title={3D Reconstruction of Spherical Images based on Incremental Structure from Motion},
-  author={Jiang, San and You, Kan and Chen, Wu and Weng, Duojie and Li, Yaxin},
-  journal={International Journal of Remote Sensing},
-  pages={1--25},
-  year={2024},
-  publisher={Taylor & Francis}
+  author = {San Jiang, Kan You, Wu Chen, Duojie Weng and Yaxin Li},
+  title = {3D reconstruction of spherical images based on incremental structure from motion},
+  journal = {International Journal of Remote Sensing},
+  volume = {45},
+  number = {8},
+  pages = {2596--2621},
+  year = {2024},
+  publisher = {Taylor & Francis}
 }
 
 @article{
-  title={Reliable Feature Matching for Spherical Images via Local Geometric Rectification and Learned Descriptor},
-  author={Jiang, San and Liu, Junhuan and Li, Yaxin and Weng, Duojie and Chen, Wu},
-  journal={Remote Sensing},
-  volume={15},
-  number={20},
-  pages={4954},
-  year={2023},
-  publisher={MDPI}
+  title = {Reliable Feature Matching for Spherical Images via Local Geometric Rectification and Learned Descriptor},
+  author = {Jiang, San and Liu, Junhuan and Li, Yaxin and Weng, Duojie and Chen, Wu},
+  journal = {Remote Sensing},
+  volume = {15},
+  number = {20},
+  pages = {4954},
+  year = {2023},
+  publisher = {MDPI}
 }
 ```
