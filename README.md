@@ -80,7 +80,7 @@ colmap mapper
 Show reconstructed models by using ColMap GUI.
 
 ```sh
-colmap gui --database_path ./colmap1/database.db --image_path ./images --import_path ./colmap1/sparse/0
+colmap gui --database_path ./colmap/database.db --image_path ./images --import_path ./colmap/sparse/0
 ```
 
 ## Reference
