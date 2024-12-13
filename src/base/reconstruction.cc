@@ -1315,6 +1315,180 @@ void Reconstruction::ExportVRML(const std::string& images_path,
   points3D_file << " ] } } }\n";
 }
 
+void Reconstruction::ExportPerspectiveCubic(
+    const std::string& path, const std::string& image_path,
+    const std::vector<int>& cubic_image_ids,
+    const int image_size, const double field_of_view) const {
+  Reconstruction cubic_reconstruction;
+
+  const std::unordered_map<int, Eigen::Matrix3d> rotations =
+      GetCubicRotations();
+
+  // Function for computing cubic image id.
+  auto GetCubicImageId = [&, this](const class Image& sphere_image,
+                                   const int cubic_image_id) {
+    return rotations.size() * sphere_image.ImageId() + cubic_image_id;
+  };
+
+  // Generate new pinhole cameras and perspective images.
+
+  for (const image_t image_id : reg_image_ids_) {
+    const class Image& sphere_image = Image(image_id);
+    const class Camera& sphere_camera = Camera(sphere_image.CameraId());
+    if (!sphere_camera.IsSpherical()) continue;
+
+    const std::string sphere_path = JoinPaths(image_path, sphere_image.Name());
+
+    std::cout << StringPrintf("Processing sphere image %s", sphere_path.c_str())
+              << std::endl;
+
+    // Add camera.
+    if (!cubic_reconstruction.ExistsCamera(sphere_camera.CameraId())) {
+      class Camera pinhole_camera =
+          image_size > 0
+              ? PinholeCamera(image_size, image_size, field_of_view)
+              : PinholeCamera(sphere_camera.Height() / 2,
+                              sphere_camera.Height() / 2, field_of_view);
+      pinhole_camera.SetCameraId(sphere_camera.CameraId());
+      cubic_reconstruction.AddCamera(pinhole_camera);
+    }
+    const class Camera& pinhole_camera =
+        cubic_reconstruction.Camera(sphere_camera.CameraId());
+
+    // Generate cubic bitmap.
+    Bitmap sphere_bitmap;
+    if (!sphere_bitmap.Read(sphere_path)) {
+      std::cout << StringPrintf("Fail to read image %s", sphere_path.c_str())
+                << std::endl;
+      continue;
+    }
+
+    std::vector<std::string> pinhole_paths =
+        SphericalToPinhole(sphere_camera, sphere_bitmap, sphere_path,
+                           pinhole_camera, path, cubic_image_ids, rotations);
+
+    // Add image.
+    for (const auto& cubic_image_id : cubic_image_ids) {
+      const image_t image_id = GetCubicImageId(sphere_image, cubic_image_id);
+      if (!cubic_reconstruction.ExistsImage(image_id)) {
+        class Image cubic_image;
+        cubic_image.SetImageId(image_id);
+        cubic_image.SetCameraId(pinhole_camera.CameraId());
+        cubic_image.SetName(GetPathBaseName(pinhole_paths[cubic_image_id]));
+        cubic_image.SetName(StringReplace(cubic_image.Name(), "\\", "/"));
+        // due to 360 cameras, rotation after BA might come with determinant -1
+        // if so, negate the rotation for future use.
+        Eigen::Matrix3d rotation = sphere_image.RotationMatrix();
+        if (rotation.determinant() < 0) {
+          rotation = rotation * (-1.0f);
+        }
+        cubic_image.Qvec() = ConcatenateQuaternions(
+            RotationMatrixToQuaternion(rotation),
+            RotationMatrixToQuaternion(rotations.at(cubic_image_id)));
+        cubic_image.Tvec() =
+            -1.0 * QuaternionRotatePoint(cubic_image.Qvec(),
+                                         sphere_image.ProjectionCenter());
+        cubic_reconstruction.AddImage(cubic_image);
+        cubic_reconstruction.RegisterImage(cubic_image.ImageId());
+      }
+    }
+  }
+
+  if (cubic_reconstruction.NumCameras() == 0) {
+    std::cout << StringPrintf("No sphere camera found in registered images.")
+              << std::endl;
+    return;
+  }
+
+  // Associate 3D points with new perspective images.
+
+  std::cout << StringPrintf("Generating cubic reconstruction...") << std::endl;
+
+  std::map<image_t, std::vector<Eigen::Vector2d>> image_obs;
+
+  struct Landmark {
+    Landmark(const Eigen::Vector3d& XYZ_, const Track& track_,
+             const Eigen::Vector3ub& color_)
+        : XYZ(XYZ_), track(track_), color(color_) {}
+
+    Eigen::Vector3d XYZ;
+    Track track;
+    Eigen::Vector3ub color;
+  };
+  typedef std::vector<Landmark> Landmarks;
+
+  Landmarks landmarks;
+
+  for (const auto& point3D : points3D_) {
+    const Eigen::Vector3d& XYZ = point3D.second.XYZ();
+    const Track& track = point3D.second.Track();
+
+    Track new_track;
+
+    for (const auto& track_ele : track.Elements()) {
+      const image_t image_id = track_ele.image_id;
+
+      const class Image& image = Image(image_id);
+      const class Camera& camera = Camera(image.CameraId());
+
+      // Loops all cubic images.
+      // bool is_reprojection_found = false;
+      for (const auto& cubic_image_id : cubic_image_ids) {
+        const image_t image_id = GetCubicImageId(image, cubic_image_id);
+        const class Image& cubic_image = cubic_reconstruction.Image(image_id);
+        const class Camera& cubic_camera =
+            cubic_reconstruction.Camera(cubic_image.CameraId());
+
+        // Check projection.
+        Eigen::Vector2d projection = ProjectPointToImage(
+            XYZ, cubic_image.ProjectionMatrix(), cubic_camera);
+        if (projection.x() < 0 || projection.x() > cubic_camera.Width() ||
+            projection.y() < 0 || projection.y() > cubic_camera.Height()) {
+          continue;
+        }
+
+        // Check direction.
+        const Eigen::Vector3d cam_to_point_dir =
+            (XYZ - cubic_image.ProjectionCenter()).normalized();
+        const double angle = RadToDeg(
+            std::acos(cam_to_point_dir.dot(cubic_image.ViewingDirection())));
+        if (angle < 0 || angle > 90) {
+          continue;
+        }
+
+        if (image_obs.count(image_id) > 0) {
+          image_obs.at(image_id).push_back(projection);
+        } else {
+          image_obs[image_id].push_back(projection);
+        }
+
+        new_track.AddElement(image_id, image_obs[image_id].size() - 1);
+        // is_reprojection_found = true;
+        break;
+      }
+      // Make sure the observation is found.
+      // CHECK(is_reprojection_found);
+    }
+
+    if (new_track.Length() > 0) {
+      landmarks.emplace_back(XYZ, new_track, point3D.second.Color());
+    }
+  }
+
+  for (const auto& image_ob : image_obs) {
+    cubic_reconstruction.Image(image_ob.first).SetPoints2D(image_ob.second);
+  }
+  for (const auto& landmark : landmarks) {
+    cubic_reconstruction.AddPoint3D(landmark.XYZ, landmark.track,
+                                    landmark.color);
+  }
+
+  // Write cubic reconstruction.
+  const std::string sparse_path = JoinPaths(path, "sparse");
+  CreateDirIfNotExists(sparse_path);
+  cubic_reconstruction.Write(sparse_path);
+}
+
 bool Reconstruction::ExtractColorsForImage(const image_t image_id,
                                            const std::string& path) {
   const class Image& image = Image(image_id);

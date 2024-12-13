@@ -36,6 +36,7 @@ COLMAP_ADD_SOURCES(
     depth_map.h depth_map.cc
     fusion.h fusion.cc
     image.h image.cc
+    mat.h mat.cc
     meshing.h meshing.cc
     model.h model.cc
     normal_map.h normal_map.cc

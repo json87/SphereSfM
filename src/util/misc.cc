@@ -134,6 +134,10 @@ std::string GetParentDir(const std::string& path) {
   return boost::filesystem::path(path).parent_path().string();
 }
 
+std::string GetAbsolutePath(const std::string& path) {
+  return boost::filesystem::canonical(path).string();
+}
+
 std::vector<std::string> GetFileList(const std::string& path) {
   std::vector<std::string> file_list;
   for (auto it = boost::filesystem::directory_iterator(path);

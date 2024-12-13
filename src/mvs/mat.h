@@ -26,8 +26,6 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: Johannes L. Schoenberger (jsch-at-demuc-dot-de)
 
 #ifndef COLMAP_SRC_MVS_MAT_H_
 #define COLMAP_SRC_MVS_MAT_H_
@@ -151,43 +149,6 @@ void Mat<T>::Set(const size_t row, const size_t col, const size_t slice,
 template <typename T>
 void Mat<T>::Fill(const T value) {
   std::fill(data_.begin(), data_.end(), value);
-}
-
-template <typename T>
-void Mat<T>::Read(const std::string& path) {
-  std::fstream text_file(path, std::ios::in | std::ios::binary);
-  CHECK(text_file.is_open()) << path;
-
-  char unused_char;
-  text_file >> width_ >> unused_char >> height_ >> unused_char >> depth_ >>
-      unused_char;
-  std::streampos pos = text_file.tellg();
-  text_file.close();
-
-  CHECK_GT(width_, 0);
-  CHECK_GT(height_, 0);
-  CHECK_GT(depth_, 0);
-  data_.resize(width_ * height_ * depth_);
-
-  std::fstream binary_file(path, std::ios::in | std::ios::binary);
-  CHECK(binary_file.is_open()) << path;
-  binary_file.seekg(pos);
-  ReadBinaryLittleEndian<T>(&binary_file, &data_);
-  binary_file.close();
-}
-
-template <typename T>
-void Mat<T>::Write(const std::string& path) const {
-  std::fstream text_file(path, std::ios::out);
-  CHECK(text_file.is_open()) << path;
-  text_file << width_ << "&" << height_ << "&" << depth_ << "&";
-  text_file.close();
-
-  std::fstream binary_file(path,
-                           std::ios::out | std::ios::binary | std::ios::app);
-  CHECK(binary_file.is_open()) << path;
-  WriteBinaryLittleEndian<T>(&binary_file, data_);
-  binary_file.close();
 }
 
 }  // namespace mvs

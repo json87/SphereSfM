@@ -26,19 +26,17 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: Johannes L. Schoenberger (jsch-at-demuc-dot-de)
 
 #ifndef COLMAP_SRC_MVS_PATCH_MATCH_CUDA_H_
 #define COLMAP_SRC_MVS_PATCH_MATCH_CUDA_H_
+
+#include <cuda_runtime.h>
 
 #include <iostream>
 #include <memory>
 #include <vector>
 
-#include <cuda_runtime.h>
-
-#include "mvs/cuda_array_wrapper.h"
+#include "mvs/cuda_texture.h"
 #include "mvs/depth_map.h"
 #include "mvs/gpu_mat.h"
 #include "mvs/gpu_mat_prng.h"
@@ -54,7 +52,6 @@ class PatchMatchCuda {
  public:
   PatchMatchCuda(const PatchMatchOptions& options,
                  const PatchMatch::Problem& problem);
-  ~PatchMatchCuda();
 
   void Run();
 
@@ -68,6 +65,8 @@ class PatchMatchCuda {
   void RunWithWindowSizeAndStep();
 
   void ComputeCudaConfig();
+
+  void BindRefImageTexture();
 
   void InitRefImage();
   void InitSourceImages();
@@ -96,9 +95,9 @@ class PatchMatchCuda {
   int rotation_in_half_pi_;
 
   // Reference and source image input data.
-  std::unique_ptr<CudaArrayWrapper<uint8_t>> ref_image_device_;
-  std::unique_ptr<CudaArrayWrapper<uint8_t>> src_images_device_;
-  std::unique_ptr<CudaArrayWrapper<float>> src_depth_maps_device_;
+  std::unique_ptr<CudaArrayLayeredTexture<uint8_t>> ref_image_texture_;
+  std::unique_ptr<CudaArrayLayeredTexture<uint8_t>> src_images_texture_;
+  std::unique_ptr<CudaArrayLayeredTexture<float>> src_depth_maps_texture_;
 
   // Relative poses from rotated versions of reference image to source images
   // corresponding to _rotationInHalfPi:
@@ -114,7 +113,7 @@ class PatchMatchCuda {
   // R, T, C, P, P^-1 denote the relative rotation, translation, camera
   // center, projection, and inverse projection from there reference to the
   // i-th source image.
-  std::unique_ptr<CudaArrayWrapper<float>> poses_device_[4];
+  std::unique_ptr<CudaArrayLayeredTexture<float>> poses_texture_[4];
 
   // Calibration matrix for rotated versions of reference image
   // as {K[0, 0], K[0, 2], K[1, 1], K[1, 2]} corresponding to _rotationInHalfPi.

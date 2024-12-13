@@ -365,6 +365,16 @@ class Reconstruction {
                   const std::string& points3D_path, const double image_scale,
                   const Eigen::Vector3d& image_rgb) const;
 
+  // Exports perspective cubic images from reconstruction of spherical camera.
+  // This is useful to facilitate dense matching as sphere cameras are merely
+  // supported. The parameter directions indicates which cubic sides would be
+  // exported, and image_size and field_of_view configure pinhole cameras.
+  void ExportPerspectiveCubic(const std::string& path,
+                              const std::string& image_path,
+                              const std::vector<int>& cubic_image_ids,
+                              const int image_size = 0,
+                              const double field_of_view = 45.0) const;
+
   // Extract colors for 3D points of given image. Colors will be extracted
   // only for 3D points which are completely black.
   //

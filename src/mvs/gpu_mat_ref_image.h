@@ -26,15 +26,13 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: Johannes L. Schoenberger (jsch-at-demuc-dot-de)
 
 #ifndef COLMAP_SRC_MVS_GPU_MAT_REF_IMAGE_H_
 #define COLMAP_SRC_MVS_GPU_MAT_REF_IMAGE_H_
 
 #include <memory>
 
-#include "mvs/cuda_array_wrapper.h"
+#include "mvs/cuda_texture.h"
 #include "mvs/gpu_mat.h"
 
 namespace colmap {

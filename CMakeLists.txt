@@ -29,7 +29,7 @@
 #
 # Author: Johannes L. Schoenberger (jsch-at-demuc-dot-de)
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 
 project(COLMAP LANGUAGES C CXX)
 
@@ -252,9 +252,7 @@ endif()
 
 if(CUDA_ENABLED AND CUDA_FOUND)
     if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-        message(
-            FATAL_ERROR "You must set CMAKE_CUDA_ARCHITECTURES to e.g. 'native', 'all-major', '70', etc. "
-            "More information at https://cmake.org/cmake/help/latest/prop_tgt/CUDA_ARCHITECTURES.html")
+        set(CMAKE_CUDA_ARCHITECTURES "native")
     endif()
 
     add_definitions("-DCUDA_ENABLED")
@@ -400,7 +398,6 @@ endif()
 
 set(COLMAP_INTERNAL_LIBRARIES
     lsd
-    pba
     poisson_recon
     sift_gpu
     vlfeat
@@ -423,7 +420,6 @@ add_subdirectory(src)
 ################################################################################
 
 COLMAP_ADD_SOURCE_DIR(lib/LSD LIB_LSD_SRCS *.h *.c)
-COLMAP_ADD_SOURCE_DIR(lib/PBA LIB_PBA_SRCS *.h *.cpp *.cu)
 COLMAP_ADD_SOURCE_DIR(lib/PoissonRecon LIB_POISSON_RECON_SRCS *.h *.cpp *.inl)
 COLMAP_ADD_SOURCE_DIR(lib/SiftGPU LIB_SIFT_GPU_SRCS *.h *.cpp *.cu)
 COLMAP_ADD_SOURCE_DIR(lib/VLFeat LIB_VLFEAT_SRCS *.h *.c *.tc)
@@ -447,7 +443,6 @@ COLMAP_ADD_SOURCE_DIR(src/util UTIL_SRCS *.h *.cc)
 add_library(
     ${COLMAP_SRC_ROOT_FOLDER}
     ${LIB_LSD_SRCS}
-    ${LIB_PBA_SRCS}
     ${LIB_POISSON_RECON_SRCS}
     ${LIB_SIFT_GPU_SRCS}
     ${LIB_VLFEAT_SRCS}

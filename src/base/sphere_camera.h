@@ -107,6 +107,80 @@ Eigen::Vector2d NormalizedPointToLonLat(
 std::vector<Eigen::Vector2d> NormalizedPointsToLonLats(
     const std::vector<Eigen::Vector2d>& normalized_points);
 
+// Compute focal length from height and fov of pinhole camera.
+//
+// @param height				Camera height.
+// @param field_of_view		    Camera field of view.
+double PinholeFocalLength(const int height, const double field_of_view = 45.0);
+
+// Configure pinhole camera from image height and fov.
+//
+// @param width					Camera width.
+// @param height				Camera height.
+// @param field_of_view		    Camera field of view.
+Camera PinholeCamera(const int width, const int height,
+                     const double field_of_view = 45.0);
+
+// Configure pinhole camera from image height and fov.
+Camera SphereCamera(const int width, const int height);
+
+// Compute rotation matrix that points to different cubic side.
+//
+// The coordinate system of sphere camera is defined according to the
+// following reference:
+//
+// Torii A, Havlena M, Pajdla T. From google street view to 3d city
+// models[C]//2009 IEEE 12th international conference on computer vision
+// workshops, ICCV Workshops. IEEE, 2009: 2188-2195.
+const std::unordered_map<int, Eigen::Matrix3d> GetCubicRotations();
+
+// Compute the rotation matrix from the nominal XYZ to the tangent plane
+// coordinate system defined by [lon, lat].
+const Eigen::Matrix3d GetTangentPlaneRotation(const double lon,
+                                              const double lat,
+                                              const double rot = 0.0);
+
+// Generate local patch image from spherical image.
+//
+// @param sphere_camera			Sphere camera.
+// @param sphere_bitmap			Sphere bitmap.
+// @param rotation				Rotation from pinhole to sphere.
+// @param pinhole_camera	    Pinhole camera.
+// @param pinhole_bitmap	    Pinhole bitmap.
+void SphericalToPatch(const Camera& sphere_camera, const Bitmap& sphere_bitmap,
+                      const Eigen::Matrix3d& rotation,
+                      const Camera& pinhole_camera, Bitmap& pinhole_bitmap);
+
+// Generate tangent projected image from spherical image.
+//
+// @param sphere_camera			Sphere camera.
+// @param sphere_bitmap			Sphere bitmap.
+// @param rotation				Rotation from pinhole to sphere.
+// @param pinhole_camera	    Pinhole camera.
+// @param pinhole_bitmap	    Pinhole bitmap.
+void SphericalToTangent(const Camera& sphere_camera,
+                        const Bitmap& sphere_bitmap,
+                        const Eigen::Matrix3d& rotation,
+                        const Camera& pinhole_camera, Bitmap& pinhole_bitmap);
+
+// Generate pinhole image from spherical image.
+//
+// @param sphere_camera			Sphere camera.
+// @param sphere_bitmap			Sphere bitmap.
+// @param sphere_path			Sphere image path.
+// @param pinhole_camera	    Pinhole camera.
+// @param output_path		    Pinhole output path.
+// @param image_ids	            Image ids.
+// @param rotations				Rotation matrix.
+// @param tangent_proj			Use tangent projection.
+// @param return		        Pinhole image paths.
+std::vector<std::string> SphericalToPinhole(
+    const Camera& sphere_camera, const Bitmap& sphere_bitmap,
+    const std::string& sphere_path, const Camera& pinhole_camera,
+    const std::string& output_path, const std::vector<int>& image_ids,
+    const std::unordered_map<int, Eigen::Matrix3d>& rotations,
+    const bool tangent_proj = true);
+
 }  // namespace colmap
 
 #endif  // COLMAP_SRC_SPHERE_CAMERA_H_

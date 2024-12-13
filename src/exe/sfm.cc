@@ -196,6 +196,7 @@ int RunMapper(int argc, char** argv) {
   options.AddMapperOptions();
   options.Parse(argc, argv);
 
+  CreateDirIfNotExists(output_path);
   if (!ExistsDir(output_path)) {
     std::cerr << "ERROR: `output_path` is not a directory." << std::endl;
     return EXIT_FAILURE;
@@ -276,6 +277,7 @@ int RunHierarchicalMapper(int argc, char** argv) {
   options.AddMapperOptions();
   options.Parse(argc, argv);
 
+  CreateDirIfNotExists(output_path);
   if (!ExistsDir(output_path)) {
     std::cerr << "ERROR: `output_path` is not a directory." << std::endl;
     return EXIT_FAILURE;
