@@ -83,6 +83,22 @@ Show reconstructed models by using ColMap GUI.
 colmap gui --database_path ./colmap/database.db --image_path ./images --import_path ./colmap/sparse/0
 ```
 
+### Step 6 - cubic conversion
+
+Convert SfM reconstruction to cubic format for the further dense matching, which can be executed in ColMap.
+
+```sh
+colmap sphere_cubic_reprojecer --image_path ./images --input_path ./colmap/sparse/0/ --output_path ./colmap/sparse-cubic
+```
+![cubic map](https://github.com/json87/SphereSfM/blob/main/doc/cubic%20map.png)
+
+```sh
+colmap image_undistorter --image_path ./colmap/sparse-cubic --input_path ./colmap/sparse-cubic/sparse --output_path ./colmap/dense --output_type COLMAP
+colmap patch_match_stereo --workspace_path ./colmap/dense --PatchMatchStereo.geom_consistency false
+colmap stereo_fusion --workspace_path ./colmap/dense --output_path ./colmap/dense/fused.ply --input_type photometric
+```
+![dense point](https://github.com/json87/SphereSfM/blob/main/doc/dense%20point.png)
+
 ## Reference
 
 Please refer to the following papers for the technique details.
