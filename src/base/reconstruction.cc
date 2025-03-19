@@ -1384,7 +1384,7 @@ void Reconstruction::ExportPerspectiveCubic(
         }
         cubic_image.Qvec() = ConcatenateQuaternions(
             RotationMatrixToQuaternion(rotation),
-            RotationMatrixToQuaternion(rotations.at(cubic_image_id)));
+            RotationMatrixToQuaternion(rotations.at(cubic_image_id).inverse()));
         cubic_image.Tvec() =
             -1.0 * QuaternionRotatePoint(cubic_image.Qvec(),
                                          sphere_image.ProjectionCenter());
